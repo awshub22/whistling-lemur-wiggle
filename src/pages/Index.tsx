@@ -8,11 +8,16 @@ import { DramaCard } from "@/components/DramaCard";
 import { Hero } from "@/components/Hero";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { DramaDetailContent } from "@/components/DramaDetailContent";
+import { Button } from "@/components/ui/button";
+
+const INITIAL_DRAMA_COUNT = 10;
+const DRAMAS_TO_LOAD = 5;
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("All");
   const [selectedDrama, setSelectedDrama] = useState<Drama | null>(null);
+  const [visibleCount, setVisibleCount] = useState(INITIAL_DRAMA_COUNT);
 
   const recommendedDramas = dramas.filter((d) => d.isRecommended);
   const bestSellerDramas = dramas.filter((d) => d.isBestSeller);
@@ -25,6 +30,10 @@ const Index = () => {
 
   const handleDramaClick = (drama: Drama) => {
     setSelectedDrama(drama);
+  };
+
+  const handleLoadMore = () => {
+    setVisibleCount((prevCount) => prevCount + DRAMAS_TO_LOAD);
   };
 
   return (
@@ -46,11 +55,20 @@ const Index = () => {
               />
             </div>
             {filteredDramas.length > 0 ? (
+              <>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                    {filteredDramas.map((drama) => (
+                    {filteredDramas.slice(0, visibleCount).map((drama) => (
                         <DramaCard key={drama.id} drama={drama} onCardClick={handleDramaClick} />
                     ))}
                 </div>
+                {visibleCount < filteredDramas.length && (
+                  <div className="text-center mt-8">
+                    <Button variant="outline" onClick={handleLoadMore} className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white">
+                      Load More
+                    </Button>
+                  </div>
+                )}
+              </>
             ) : (
                 <div className="text-center py-10">
                     <p className="text-muted-foreground">No dramas found matching your criteria.</p>
