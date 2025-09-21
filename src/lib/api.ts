@@ -1,16 +1,14 @@
 import type { Drama } from "@/data/dramas";
 
-const API_BASE_URL = "https://api.dramawok.test"; // Ganti dengan URL backend Anda
+const API_BASE_URL = "/api"; // Menggunakan path relatif untuk proxy
 
 export const getDramas = async (): Promise<Drama[]> => {
-  // Ini adalah contoh. Anda perlu menyesuaikan dengan endpoint dan struktur data Anda.
+  // Sekarang ini akan diarahkan ke http://localhost:3400/api/dramas
   const response = await fetch(`${API_BASE_URL}/dramas`);
   if (!response.ok) {
     throw new Error("Network response was not ok");
   }
   const data = await response.json();
-  // Jika struktur data backend berbeda, Anda perlu memetakannya di sini
-  // Contoh: return data.map(item => ({ id: item.drama_id, title: item.drama_title, ... }))
   return data;
 };
 
