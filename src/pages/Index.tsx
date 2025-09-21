@@ -9,6 +9,8 @@ import { Hero } from "@/components/Hero";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { DramaDetailContent } from "@/components/DramaDetailContent";
 import { Button } from "@/components/ui/button";
+import { LoginPopup } from "@/components/LoginPopup";
+import { useToast } from "@/components/ui/use-toast";
 
 const INITIAL_DRAMA_COUNT = 10;
 const DRAMAS_TO_LOAD = 5;
@@ -18,6 +20,9 @@ const Index = () => {
   const [selectedGenre, setSelectedGenre] = useState("All");
   const [selectedDrama, setSelectedDrama] = useState<Drama | null>(null);
   const [visibleCount, setVisibleCount] = useState(INITIAL_DRAMA_COUNT);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
+  const { toast } = useToast();
 
   const recommendedDramas = dramas.filter((d) => d.isRecommended);
   const bestSellerDramas = dramas.filter((d) => d.isBestSeller);
@@ -36,9 +41,32 @@ const Index = () => {
     setVisibleCount((prevCount) => prevCount + DRAMAS_TO_LOAD);
   };
 
+  const handleLoginSuccess = (email: string) => {
+    setIsLoggedIn(true);
+    setIsLoginPopupOpen(false);
+    toast({
+      title: "Login Successful",
+      description: `Welcome back, ${email}!`,
+    });
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    toast({
+      title: "Logged Out",
+      description: "You have been successfully logged out.",
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-black text-foreground">
-      <Header searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+      <Header 
+        searchTerm={searchTerm} 
+        onSearchChange={setSearchTerm}
+        isLoggedIn={isLoggedIn}
+        onLoginClick={() => setIsLoginPopupOpen(true)}
+        onLogoutClick={handleLogout}
+      />
       <main className="container mx-auto px-4 pb-8">
         <Hero />
 
@@ -83,6 +111,12 @@ const Index = () => {
           {selectedDrama && <DramaDetailContent drama={selectedDrama} />}
         </DialogContent>
       </Dialog>
+
+      <LoginPopup 
+        open={isLoginPopupOpen}
+        onOpenChange={setIsLoginPopupOpen}
+        onLoginSuccess={handleLoginSuccess}
+      />
     </div>
   );
 };

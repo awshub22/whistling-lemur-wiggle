@@ -1,4 +1,4 @@
-import { Search, Menu } from "lucide-react";
+import { Search, Menu, User, LogOut } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
@@ -7,20 +7,35 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { NavLink } from "react-router-dom";
 
 interface HeaderProps {
   searchTerm: string;
   onSearchChange: (term: string) => void;
+  isLoggedIn: boolean;
+  onLoginClick: () => void;
+  onLogoutClick: () => void;
 }
 
-const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/dramas", label: "Daftar Drama" },
-  { href: "/genres", label: "Genre" },
-];
+export function Header({ searchTerm, onSearchChange, isLoggedIn, onLoginClick, onLogoutClick }: HeaderProps) {
+  const baseNavLinks = [
+    { href: "/", label: "Home" },
+    { href: "/dramas", label: "Daftar Drama" },
+    { href: "/genres", label: "Genre" },
+  ];
 
-export function Header({ searchTerm, onSearchChange }: HeaderProps) {
+  const navLinks = isLoggedIn
+    ? [...baseNavLinks, { href: "/my-library", label: "My Library" }]
+    : baseNavLinks;
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-background/80 backdrop-blur-lg supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
@@ -60,9 +75,28 @@ export function Header({ searchTerm, onSearchChange }: HeaderProps) {
             />
           </div>
           <ThemeToggle />
-          <Button className="hidden md:inline-flex bg-gradient-to-r from-red-600 to-red-800 text-white hover:scale-105 transition-transform duration-200">
-            Login
-          </Button>
+          {isLoggedIn ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="rounded-full">
+                  <User className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <NavLink to="/my-library"><DropdownMenuItem>My Library</DropdownMenuItem></NavLink>
+                <DropdownMenuItem onSelect={onLogoutClick}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button onClick={onLoginClick} className="hidden md:inline-flex bg-gradient-to-r from-red-600 to-red-800 text-white hover:scale-105 transition-transform duration-200">
+              Login
+            </Button>
+          )}
           
           <Sheet>
             <SheetTrigger asChild>
@@ -77,15 +111,6 @@ export function Header({ searchTerm, onSearchChange }: HeaderProps) {
                     DRAMAWOK
                   </span>
                 </NavLink>
-                <div className="relative w-full mb-4">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search..."
-                    className="pl-10 bg-background/50 border-white/20"
-                    value={searchTerm}
-                    onChange={(e) => onSearchChange(e.target.value)}
-                  />
-                </div>
                 <nav className="flex flex-col gap-4 items-center">
                   {navLinks.map((link) => (
                     <NavLink
@@ -101,9 +126,13 @@ export function Header({ searchTerm, onSearchChange }: HeaderProps) {
                     </NavLink>
                   ))}
                 </nav>
-                <Button className="mt-6 bg-gradient-to-r from-red-600 to-red-800 text-white hover:scale-105 transition-transform duration-200">
-                  Login
-                </Button>
+                {isLoggedIn ? (
+                  <Button onClick={onLogoutClick} variant="outline" className="mt-6">Logout</Button>
+                ) : (
+                  <Button onClick={onLoginClick} className="mt-6 bg-gradient-to-r from-red-600 to-red-800 text-white hover:scale-105 transition-transform duration-200">
+                    Login
+                  </Button>
+                )}
               </div>
             </SheetContent>
           </Sheet>
