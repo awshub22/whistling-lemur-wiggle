@@ -2,13 +2,17 @@ import type { Drama } from "@/data/dramas";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Star, Play, Plus, Share2 } from "lucide-react";
+import { Star, Play, Plus, Share2, Check } from "lucide-react";
+import { useAppContext } from "@/context/AppContext";
 
 interface DramaDetailContentProps {
   drama: Drama;
 }
 
 export function DramaDetailContent({ drama }: DramaDetailContentProps) {
+  const { toggleWatchlist, addToHistory, isInWatchlist } = useAppContext();
+  const inWatchlist = isInWatchlist(drama.id);
+
   return (
     <div className="relative text-white">
       <div className="absolute top-0 left-0 w-full h-2/3">
@@ -39,12 +43,13 @@ export function DramaDetailContent({ drama }: DramaDetailContentProps) {
           </div>
 
           <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-8">
-            <Button className="w-full md:w-auto bg-white text-black hover:bg-gray-200">
+            <Button onClick={() => addToHistory(drama)} className="w-full md:w-auto bg-white text-black hover:bg-gray-200">
               <Play className="mr-2 h-4 w-4" /> Mulai Menonton
             </Button>
             <div className="flex items-center gap-4">
-              <Button variant="ghost" className="hover:bg-white/10">
-                <Plus className="mr-2 h-4 w-4" /> Watchlist
+              <Button onClick={() => toggleWatchlist(drama)} variant="ghost" className="hover:bg-white/10">
+                {inWatchlist ? <Check className="mr-2 h-4 w-4" /> : <Plus className="mr-2 h-4 w-4" />}
+                {inWatchlist ? 'In Watchlist' : 'Watchlist'}
               </Button>
               <Button variant="ghost" className="hover:bg-white/10">
                 <Share2 className="mr-2 h-4 w-4" /> Share

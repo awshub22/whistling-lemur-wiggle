@@ -16,16 +16,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { NavLink } from "react-router-dom";
+import { useAppContext } from "@/context/AppContext";
 
 interface HeaderProps {
   searchTerm: string;
   onSearchChange: (term: string) => void;
-  isLoggedIn: boolean;
   onLoginClick: () => void;
-  onLogoutClick: () => void;
 }
 
-export function Header({ searchTerm, onSearchChange, isLoggedIn, onLoginClick, onLogoutClick }: HeaderProps) {
+export function Header({ searchTerm, onSearchChange, onLoginClick }: HeaderProps) {
+  const { isLoggedIn, logout } = useAppContext();
+
   const baseNavLinks = [
     { href: "/", label: "Home" },
     { href: "/dramas", label: "Daftar Drama" },
@@ -86,7 +87,7 @@ export function Header({ searchTerm, onSearchChange, isLoggedIn, onLoginClick, o
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <NavLink to="/my-library"><DropdownMenuItem>My Library</DropdownMenuItem></NavLink>
-                <DropdownMenuItem onSelect={onLogoutClick}>
+                <DropdownMenuItem onSelect={logout}>
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>
                 </DropdownMenuItem>
@@ -127,7 +128,7 @@ export function Header({ searchTerm, onSearchChange, isLoggedIn, onLoginClick, o
                   ))}
                 </nav>
                 {isLoggedIn ? (
-                  <Button onClick={onLogoutClick} variant="outline" className="mt-6">Logout</Button>
+                  <Button onClick={logout} variant="outline" className="mt-6">Logout</Button>
                 ) : (
                   <Button onClick={onLoginClick} className="mt-6 bg-gradient-to-r from-red-600 to-red-800 text-white hover:scale-105 transition-transform duration-200">
                     Login
