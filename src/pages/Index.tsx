@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 import { Header } from "@/components/Header";
 import { DramaList } from "@/components/DramaList";
 import { GenreFilter } from "@/components/GenreFilter";
@@ -7,8 +7,8 @@ import { MadeWithDyad } from "@/components/made-with-dyad";
 import { DramaCard } from "@/components/DramaCard";
 
 const Index = () => {
-  const [searchTerm, setSearchTerm] = React.useState("");
-  const [selectedGenre, setSelectedGenre] = React.useState("All");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedGenre, setSelectedGenre] = useState("All");
 
   const recommendedDramas = dramas.filter((d) => d.isRecommended);
   const bestSellerDramas = dramas.filter((d) => d.isBestSeller);
