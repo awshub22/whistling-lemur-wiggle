@@ -21,7 +21,7 @@ const Index = () => {
   });
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-gradient-to-b from-background to-black text-foreground">
       <Header searchTerm={searchTerm} onSearchChange={setSearchTerm} />
       <main className="container mx-auto px-4 pb-8">
         <Hero />

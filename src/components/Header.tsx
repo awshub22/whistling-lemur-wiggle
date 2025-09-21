@@ -56,7 +56,9 @@ export function Header({ searchTerm, onSearchChange }: HeaderProps) {
             />
           </div>
           <ThemeToggle />
-          <Button className="hidden md:inline-flex">Login</Button>
+          <Button className="hidden md:inline-flex bg-gradient-to-r from-red-600 to-red-800 text-white hover:opacity-90 transition-opacity">
+            Login
+          </Button>
           
           <Sheet>
             <SheetTrigger asChild>
@@ -93,7 +95,9 @@ export function Header({ searchTerm, onSearchChange }: HeaderProps) {
                     </NavLink>
                   ))}
                 </nav>
-                <Button className="mt-4">Login</Button>
+                <Button className="mt-4 bg-gradient-to-r from-red-600 to-red-800 text-white hover:opacity-90 transition-opacity">
+                  Login
+                </Button>
               </div>
             </SheetContent>
           </Sheet>
