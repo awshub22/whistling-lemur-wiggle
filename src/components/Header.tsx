@@ -22,20 +22,24 @@ const navLinks = [
 
 export function Header({ searchTerm, onSearchChange }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center justify-between">
-        <div className="flex items-center gap-6">
-          <NavLink to="/" className="text-xl md:text-2xl font-bold text-red-600">
-            DRAMAWOK
+    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-background/80 backdrop-blur-lg supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-16 items-center justify-between">
+        <div className="flex items-center gap-8">
+          <NavLink to="/" className="text-2xl md:text-3xl font-extrabold tracking-tight">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-red-500 to-red-700">
+              DRAMAWOK
+            </span>
           </NavLink>
-          <nav className="hidden md:flex items-center gap-4">
+          <nav className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => (
               <NavLink
                 key={link.href}
                 to={link.href}
                 className={({ isActive }) =>
-                  `text-sm font-medium transition-colors hover:text-primary ${
-                    isActive ? "text-primary" : "text-muted-foreground"
+                  `text-sm font-medium transition-all duration-200 hover:text-red-500 pb-1 ${
+                    isActive 
+                      ? "text-red-500 border-b-2 border-red-500" 
+                      : "text-muted-foreground border-b-2 border-transparent"
                   }`
                 }
               >
@@ -50,13 +54,13 @@ export function Header({ searchTerm, onSearchChange }: HeaderProps) {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search..."
-              className="pl-10 w-40 md:w-64"
+              className="pl-10 w-40 md:w-64 bg-background/50 border-white/20 focus:ring-red-500"
               value={searchTerm}
               onChange={(e) => onSearchChange(e.target.value)}
             />
           </div>
           <ThemeToggle />
-          <Button className="hidden md:inline-flex bg-gradient-to-r from-red-600 to-red-800 text-white hover:opacity-90 transition-opacity">
+          <Button className="hidden md:inline-flex bg-gradient-to-r from-red-600 to-red-800 text-white hover:scale-105 transition-transform duration-200">
             Login
           </Button>
           
@@ -66,28 +70,30 @@ export function Header({ searchTerm, onSearchChange }: HeaderProps) {
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right">
+            <SheetContent side="right" className="bg-background/90 backdrop-blur-lg">
               <div className="flex flex-col gap-4 p-4">
-                <NavLink to="/" className="text-xl font-bold text-red-600 mb-4">
-                  DRAMAWOK
+                <NavLink to="/" className="text-2xl font-extrabold text-center mb-4">
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-red-500 to-red-700">
+                    DRAMAWOK
+                  </span>
                 </NavLink>
                 <div className="relative w-full mb-4">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     placeholder="Search..."
-                    className="pl-10"
+                    className="pl-10 bg-background/50 border-white/20"
                     value={searchTerm}
                     onChange={(e) => onSearchChange(e.target.value)}
                   />
                 </div>
-                <nav className="flex flex-col gap-3">
+                <nav className="flex flex-col gap-4 items-center">
                   {navLinks.map((link) => (
                     <NavLink
                       key={link.href}
                       to={link.href}
                       className={({ isActive }) =>
-                        `text-lg font-medium transition-colors hover:text-primary ${
-                          isActive ? "text-primary" : "text-foreground"
+                        `text-lg font-medium transition-colors hover:text-red-500 ${
+                          isActive ? "text-red-500" : "text-foreground"
                         }`
                       }
                     >
@@ -95,7 +101,7 @@ export function Header({ searchTerm, onSearchChange }: HeaderProps) {
                     </NavLink>
                   ))}
                 </nav>
-                <Button className="mt-4 bg-gradient-to-r from-red-600 to-red-800 text-white hover:opacity-90 transition-opacity">
+                <Button className="mt-6 bg-gradient-to-r from-red-600 to-red-800 text-white hover:scale-105 transition-transform duration-200">
                   Login
                 </Button>
               </div>
