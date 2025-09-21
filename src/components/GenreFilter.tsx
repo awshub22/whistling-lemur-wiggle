@@ -14,9 +14,9 @@ interface GenreFilterProps {
 
 export function GenreFilter({ genres, selectedGenre, onGenreChange }: GenreFilterProps) {
   return (
-    <div className="py-4">
+    <div>
       <Select value={selectedGenre} onValueChange={onGenreChange}>
-        <SelectTrigger className="w-full sm:w-[280px]">
+        <SelectTrigger className="w-full sm:w-[180px]">
           <SelectValue placeholder="Select a genre" />
         </SelectTrigger>
         <SelectContent>

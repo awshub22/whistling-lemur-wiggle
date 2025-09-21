@@ -5,6 +5,7 @@ import { GenreFilter } from "@/components/GenreFilter";
 import { dramas, genres } from "@/data/dramas";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { DramaCard } from "@/components/DramaCard";
+import { Hero } from "@/components/Hero";
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -22,22 +23,21 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Header searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-      <main className="container mx-auto px-4">
-        <div className="text-center py-8">
-          <h1 className="text-3xl md:text-4xl font-bold">Premium Drama Videos</h1>
-          <p className="text-muted-foreground mt-2">Watch your favorite dramas without any ads.</p>
-        </div>
+      <main className="container mx-auto px-4 pb-8">
+        <Hero />
 
         <DramaList title="Rekomendasi Untuk Anda" dramas={recommendedDramas} />
         <DramaList title="Drama Paling Laris" dramas={bestSellerDramas} />
         
         <section className="py-6">
-            <h2 className="text-2xl font-bold mb-4">Semua Drama</h2>
-            <GenreFilter 
-                genres={genres}
-                selectedGenre={selectedGenre}
-                onGenreChange={setSelectedGenre}
-            />
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
+              <h2 className="text-2xl font-bold">Semua Drama</h2>
+              <GenreFilter 
+                  genres={genres}
+                  selectedGenre={selectedGenre}
+                  onGenreChange={setSelectedGenre}
+              />
+            </div>
             {filteredDramas.length > 0 ? (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                     {filteredDramas.map((drama) => (

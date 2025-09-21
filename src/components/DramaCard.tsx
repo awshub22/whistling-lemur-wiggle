@@ -1,11 +1,10 @@
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import type { Drama } from "@/data/dramas";
+import { PlayCircle } from "lucide-react";
 
 interface DramaCardProps {
   drama: Drama;
@@ -13,21 +12,24 @@ interface DramaCardProps {
 
 export function DramaCard({ drama }: DramaCardProps) {
   return (
-    <Card className="overflow-hidden transition-transform hover:scale-105 hover:shadow-lg">
-      <CardHeader className="p-0">
-        <AspectRatio ratio={2 / 3}>
+    <Card className="overflow-hidden border-none group cursor-pointer">
+      <CardContent className="p-0">
+        <AspectRatio ratio={2 / 3} className="bg-muted rounded-md overflow-hidden">
           <img
             src={drama.imageUrl}
             alt={drama.title}
-            className="object-cover w-full h-full"
+            className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
           />
+          <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <PlayCircle className="w-12 h-12 text-white" />
+          </div>
         </AspectRatio>
-      </CardHeader>
-      <CardContent className="p-4">
-        <CardTitle className="text-base font-semibold truncate">
-          {drama.title}
-        </CardTitle>
-        <p className="text-sm text-muted-foreground">{drama.genre}</p>
+        <div className="pt-2">
+          <h3 className="text-sm font-semibold truncate group-hover:text-red-500 transition-colors">
+            {drama.title}
+          </h3>
+          <p className="text-xs text-muted-foreground">{drama.genre}</p>
+        </div>
       </CardContent>
     </Card>
   );

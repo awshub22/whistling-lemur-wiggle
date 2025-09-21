@@ -1,5 +1,12 @@
 import type { Drama } from "@/data/dramas";
 import { DramaCard } from "./DramaCard";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 interface DramaListProps {
   title: string;
@@ -14,11 +21,23 @@ export function DramaList({ title, dramas }: DramaListProps) {
   return (
     <section className="py-6">
       <h2 className="text-2xl font-bold mb-4">{title}</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {dramas.map((drama) => (
-          <DramaCard key={drama.id} drama={drama} />
-        ))}
-      </div>
+      <Carousel
+        opts={{
+          align: "start",
+          slidesToScroll: 'auto',
+        }}
+        className="w-full"
+      >
+        <CarouselContent className="-ml-4">
+          {dramas.map((drama) => (
+            <CarouselItem key={drama.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 pl-4">
+              <DramaCard drama={drama} />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="hidden md:flex" />
+        <CarouselNext className="hidden md:flex" />
+      </Carousel>
     </section>
   );
 }
