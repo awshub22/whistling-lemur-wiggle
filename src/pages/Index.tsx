@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { DramaList } from "@/components/DramaList";
 import { GenreFilter } from "@/components/GenreFilter";
-import { dramas, genres, Drama } from "@/data/dramas";
+import { genres, Drama } from "@/data/dramas";
 import { DramaCard } from "@/components/DramaCard";
 import { Hero } from "@/components/Hero";
 import { Button } from "@/components/ui/button";
+import { getDramas } from "@/lib/api";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const INITIAL_DRAMA_COUNT = 10;
 const DRAMAS_TO_LOAD = 5;
@@ -19,6 +22,27 @@ const Index = () => {
   const { searchTerm, handleDramaClick } = useOutletContext<IndexContext>();
   const [selectedGenre, setSelectedGenre] = useState("All");
   const [visibleCount, setVisibleCount] = useState(INITIAL_DRAMA_COUNT);
+
+  const { data: dramas = [], isLoading, error } = useQuery<Drama[]>({
+    queryKey: ["dramas"],
+    queryFn: getDramas,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 pb-8">
+        <Skeleton className="w-full aspect-video rounded-lg my-8" />
+        <Skeleton className="h-8 w-64 mb-4" />
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="w-full aspect-[2/3] rounded-md" />)}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div className="text-center py-20 text-red-500">Error: Failed to load dramas. Please try again later.</div>;
+  }
 
   const recommendedDramas = dramas.filter((d) => d.isRecommended);
   const bestSellerDramas = dramas.filter((d) => d.isBestSeller);
