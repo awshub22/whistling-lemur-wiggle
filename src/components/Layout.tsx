@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { Header } from "@/components/Header";
 import { LoginPopup } from "@/components/LoginPopup";
 import { useAppContext } from "@/context/AppContext";
@@ -7,12 +8,30 @@ import { MadeWithDyad } from "./made-with-dyad";
 import type { Drama } from "@/data/dramas";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { DramaDetailContent } from "@/components/DramaDetailContent";
+import { getDramas } from "@/lib/api";
 
 export const Layout = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
   const [selectedDrama, setSelectedDrama] = useState<Drama | null>(null);
+  const [searchResults, setSearchResults] = useState<Drama[]>([]);
   const { login } = useAppContext();
+
+  const { data: dramas = [], isLoading, error } = useQuery<Drama[]>({
+    queryKey: ["dramas"],
+    queryFn: getDramas,
+  });
+
+  useEffect(() => {
+    if (searchTerm) {
+      const results = dramas.filter(drama => 
+        drama.title.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setSearchResults(results);
+    } else {
+      setSearchResults([]);
+    }
+  }, [searchTerm, dramas]);
 
   const handleDramaClick = (drama: Drama) => {
     setSelectedDrama(drama);
@@ -29,9 +48,11 @@ export const Layout = () => {
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         onLoginClick={() => setIsLoginPopupOpen(true)}
+        searchResults={searchResults}
+        onResultClick={handleDramaClick}
       />
       <main className="container mx-auto px-4 pb-8">
-        <Outlet context={{ searchTerm, handleDramaClick }} />
+        <Outlet context={{ searchTerm, handleDramaClick, dramas, isLoading, error }} />
       </main>
       <MadeWithDyad />
       <LoginPopup

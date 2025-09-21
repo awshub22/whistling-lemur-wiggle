@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import { DramaList } from "@/components/DramaList";
 import { GenreFilter } from "@/components/GenreFilter";
 import { genres, Drama } from "@/data/dramas";
 import { DramaCard } from "@/components/DramaCard";
 import { Hero } from "@/components/Hero";
 import { Button } from "@/components/ui/button";
-import { getDramas } from "@/lib/api";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const INITIAL_DRAMA_COUNT = 10;
@@ -16,17 +14,15 @@ const DRAMAS_TO_LOAD = 5;
 interface IndexContext {
   searchTerm: string;
   handleDramaClick: (drama: Drama) => void;
+  dramas: Drama[];
+  isLoading: boolean;
+  error: Error | null;
 }
 
 const Index = () => {
-  const { searchTerm, handleDramaClick } = useOutletContext<IndexContext>();
+  const { searchTerm, handleDramaClick, dramas, isLoading, error } = useOutletContext<IndexContext>();
   const [selectedGenre, setSelectedGenre] = useState("All");
   const [visibleCount, setVisibleCount] = useState(INITIAL_DRAMA_COUNT);
-
-  const { data: dramas = [], isLoading, error } = useQuery<Drama[]>({
-    queryKey: ["dramas"],
-    queryFn: getDramas,
-  });
 
   if (isLoading) {
     return (
@@ -49,6 +45,7 @@ const Index = () => {
 
   const filteredDramas = dramas.filter((drama) => {
     const matchesGenre = selectedGenre === "All" || drama.genre === selectedGenre;
+    // Search term filtering is now primarily for the main list, dropdown is for quick access
     const matchesSearch = drama.title.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesGenre && matchesSearch;
   });
