@@ -11,9 +11,10 @@ import {
 interface DramaListProps {
   title: string;
   dramas: Drama[];
+  onDramaClick: (drama: Drama) => void;
 }
 
-export function DramaList({ title, dramas }: DramaListProps) {
+export function DramaList({ title, dramas, onDramaClick }: DramaListProps) {
   if (dramas.length === 0) {
     return null;
   }
@@ -31,7 +32,7 @@ export function DramaList({ title, dramas }: DramaListProps) {
         <CarouselContent className="-ml-4">
           {dramas.map((drama) => (
             <CarouselItem key={drama.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 pl-4">
-              <DramaCard drama={drama} />
+              <DramaCard drama={drama} onCardClick={onDramaClick} />
             </CarouselItem>
           ))}
         </CarouselContent>
